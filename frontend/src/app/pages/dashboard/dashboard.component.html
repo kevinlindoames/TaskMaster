@@ -1,0 +1,103 @@
+<div class="container mt-4">
+    <h1>Mis Tareas</h1>
+    
+    <button class="btn btn-primary mb-3" (click)="openTaskForm()">Nueva Tarea</button>
+    
+    <div class="row">
+      <div class="col-md-12">
+        <div class="list-group">
+          <div *ngFor="let task of tasks" class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+              <h5 class="mb-1">{{ task.title }}</h5>
+              <small>Fecha límite: {{ task.due_date | date }}</small>
+            </div>
+            <p class="mb-1">{{ task.description }}</p>
+            <div class="d-flex justify-content-between">
+              <small>Estado: {{ task.status === 'pending' ? 'Pendiente' : 'Completada' }}</small>
+              <div>
+                <button class="btn btn-sm btn-info me-2" (click)="editTask(task)">Editar</button>
+                <button class="btn btn-sm btn-danger me-2" (click)="deleteTask(task)">Eliminar</button>
+                <button 
+                  class="btn btn-sm" 
+                  [ngClass]="task.status === 'pending' ? 'btn-success' : 'btn-warning'"
+                  (click)="toggleStatus(task)">
+                  {{ task.status === 'pending' ? 'Marcar Completada' : 'Marcar Pendiente' }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div *ngIf="tasks.length === 0" class="alert alert-info mt-3">
+          No tienes tareas. ¡Crea una nueva!
+        </div>
+      </div>
+    </div>
+    
+    <!-- Modal para crear/editar tarea -->
+    <div class="modal" tabindex="-1" [ngClass]="{'show d-block': showTaskModal}">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">{{ editMode ? 'Editar Tarea' : 'Nueva Tarea' }}</h5>
+            <button type="button" class="btn-close" (click)="closeTaskForm()"></button>
+          </div>
+          <div class="modal-body">
+            <form (ngSubmit)="saveTask()" #taskForm="ngForm">
+              <div class="mb-3">
+                <label for="title" class="form-label">Título</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="title" 
+                  [(ngModel)]="currentTask.title" 
+                  name="title" 
+                  required>
+              </div>
+              
+              <div class="mb-3">
+                <label for="description" class="form-label">Descripción</label>
+                <textarea 
+                  class="form-control" 
+                  id="description" 
+                  [(ngModel)]="currentTask.description" 
+                  name="description" 
+                  rows="3"></textarea>
+              </div>
+              
+              <div class="mb-3">
+                <label for="dueDate" class="form-label">Fecha de Vencimiento</label>
+                <input 
+                  type="date" 
+                  class="form-control" 
+                  id="dueDate" 
+                  [(ngModel)]="currentTask.due_date" 
+                  name="dueDate">
+              </div>
+              
+              <div class="mb-3">
+                <label for="status" class="form-label">Estado</label>
+                <select 
+                  class="form-select" 
+                  id="status" 
+                  [(ngModel)]="currentTask.status" 
+                  name="status" 
+                  required>
+                  <option value="pending">Pendiente</option>
+                  <option value="completed">Completada</option>
+                </select>
+              </div>
+              
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="closeTaskForm()">Cancelar</button>
+                <button type="submit" class="btn btn-primary" [disabled]="!taskForm.form.valid">Guardar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Overlay para el modal -->
+    <div class="modal-backdrop fade show" *ngIf="showTaskModal"></div>
+  </div>

@@ -1,1 +1,23 @@
-/* You can add global styles to this file, and also import other style files */
+/* Importa Bootstrap */
+@import "bootstrap/dist/css/bootstrap.min.css";
+
+/* Estilos personalizados */
+body {
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+.card {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos para el modal */
+.modal-backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1040;
+  width: 100vw;
+  height: 100vh;
+}
