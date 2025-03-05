@@ -1,0 +1,22 @@
+# Laravel
+/vendor
+/node_modules
+/public/storage
+/storage/*.key
+
+# Laravel debugbar
+/.idea
+/.vscode
+
+# Composer directories
+/composer.phar
+
+# IDE files
+*.sublime-workspace
+*.sublime-project
+.idea/
+.vscode/
+
+# OS generated files
+.DS_Store
+Thumbs.db

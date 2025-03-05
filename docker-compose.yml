@@ -1,0 +1,69 @@
+services:
+  # Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: taskmaster-backend
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./backend:/var/www/html
+      - ./backend/vendor:/var/www/html/vendor
+    depends_on:
+      - db
+    networks:
+      - taskmaster
+
+  nginx-backend:
+    image: nginx:alpine
+    container_name: taskmaster-nginx-backend
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - ./backend:/var/www/html
+      - ./backend/docker/nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - backend
+    networks:
+      - taskmaster
+
+  # Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: taskmaster-frontend
+    restart: unless-stopped
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+    networks:
+      - taskmaster
+
+  # Base de datos
+  db:
+    image: mysql:8.0
+    container_name: taskmaster-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: taskmaster
+      MYSQL_ROOT_PASSWORD: secretpassword
+      MYSQL_PASSWORD: secretpassword
+      MYSQL_USER: taskmaster
+    volumes:
+      - dbdata:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - taskmaster
+
+networks:
+  taskmaster:
+    driver: bridge
+
+volumes:
+  dbdata:
+    driver: local
