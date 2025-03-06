@@ -50,11 +50,14 @@ services:
     restart: unless-stopped
     environment:
       MYSQL_DATABASE: taskmaster
+      MYSQL_DATABASE_TEST: taskmaster_testing  
       MYSQL_ROOT_PASSWORD: secretpassword
       MYSQL_PASSWORD: secretpassword
       MYSQL_USER: taskmaster
     volumes:
       - dbdata:/var/lib/mysql
+      - ./backend/docker/mysql/init-test-db.sql:/docker-entrypoint-initdb.d/init-test-db.sql
+
     ports:
       - "3306:3306"
     networks:
